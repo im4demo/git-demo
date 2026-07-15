@@ -1,5 +1,258 @@
-<p>This is a new Local Repo</p>
-<p>New change in Feature1 (Dropdown)</p>
-<p>New change in Feature1 (Button)</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
 
-.
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: #0077cc;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            height: 500px;
+            background: linear-gradient(
+                rgba(0,0,0,0.5),
+                rgba(0,0,0,0.5)
+            ),
+            url("https://via.placeholder.com/1200x500") center/cover;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background: #0077cc;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: #005fa3;
+        }
+
+
+        /* Services */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .container h2 {
+            color: #0077cc;
+            margin-bottom: 30px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            width: 280px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #0077cc;
+            margin-bottom: 15px;
+        }
+
+
+        /* Footer */
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+
+        @media(max-width:768px) {
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 15px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- Navigation -->
+<nav>
+
+    <div class="logo">
+        My Company
+    </div>
+
+    <ul>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
+
+        <li>
+            <a href="about-us.html">About Us</a>
+        </li>
+
+        <li>
+            <a href="contact-us.html">Contact Us</a>
+        </li>
+    </ul>
+
+</nav>
+
+
+
+<!-- Hero Section -->
+<section class="hero">
+
+    <div>
+        <h1>Welcome To Our Website</h1>
+
+        <p>
+            We create innovative solutions to help your business grow.
+        </p>
+
+        <a href="about-us.html" class="btn">
+            Learn More
+        </a>
+
+        <a href="contact-us.html" class="btn">
+            Contact Us
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- Services Section -->
+<section class="container">
+
+    <h2>What We Offer</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Web Development</h3>
+            <p>
+                Modern and responsive websites built with the latest technologies.
+            </p>
+        </div>
+
+
+        <div class="card">
+            <h3>UI/UX Design</h3>
+            <p>
+                Creative designs that provide excellent user experiences.
+            </p>
+        </div>
+
+
+        <div class="card">
+            <h3>Digital Solutions</h3>
+            <p>
+                Smart solutions to improve your online presence.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- Footer -->
+<footer>
+
+    <p>
+        &copy; 2026 My Company. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+</body>
+</html>
