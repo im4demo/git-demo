@@ -10,30 +10,8 @@ permissions:
 
 jobs:
 
-  merge-to-staging:
-    name: Merge Main → Staging
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Merge main into staging
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-          git fetch origin
-
-          git checkout staging
-          git merge origin/main --no-edit
-          git push origin staging
-
-  merge-to-production:
-    name: Merge Staging → Production
-    needs: merge-to-staging
+  merge-branches:
+    name: Merge Branches
     runs-on: ubuntu-latest
 
     environment:
@@ -45,11 +23,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Merge staging into production
+      - name: Configure Git
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
+      - name: Merge Main → Staging
+        run: |
+          git fetch origin
+
+          git checkout staging
+          git merge origin/main --no-edit
+          git push origin staging
+
+      - name: Merge Staging → Production
+        run: |
           git fetch origin
 
           git checkout production
@@ -58,7 +46,7 @@ jobs:
 
   create-tag:
     name: Create Git Tag
-    needs: merge-to-production
+    needs: merge-branches
     runs-on: ubuntu-latest
 
     outputs:
@@ -70,13 +58,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create tag
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Create Tag
         id: tag
         run: |
           VERSION="v$(date +'%Y.%m.%d-%H%M%S')"
 
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          git fetch origin
+          git checkout production
 
           git tag "$VERSION"
           git push origin "$VERSION"
