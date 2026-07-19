@@ -1,8 +1,24 @@
+name: Release Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
 jobs:
+
   merge-branches:
     name: Merge Branches
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -15,22 +31,75 @@ jobs:
 
       - name: "1. Merging: Main -> Staging"
         run: |
-          echo "::group::1. Merging: Main -> Staging"
+          echo "Starting merge: Main -> Staging"
 
           git fetch origin
+
           git checkout staging
           git merge origin/main --no-edit
           git push origin staging
 
-          echo "::endgroup::"
+          echo "Completed merge: Main -> Staging"
 
       - name: "2. Merging: Staging -> Production"
         run: |
-          echo "::group::2. Merging: Staging -> Production"
+          echo "Starting merge: Staging -> Production"
 
           git fetch origin
+
           git checkout production
           git merge origin/staging --no-edit
           git push origin production
 
-          echo "::endgroup::"
+          echo "Completed merge: Staging -> Production"
+
+
+  create-tag:
+    name: Create Git Tag
+    needs: merge-branches
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.create_tag.outputs.version }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          VERSION="v$(date +'%Y.%m.%d-%H%M%S')"
+
+          git fetch origin
+          git checkout production
+
+          git tag "$VERSION"
+          git push origin "$VERSION"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          echo "Created tag: $VERSION"
+
+
+  create-release:
+    name: Create GitHub Release
+    needs: create-tag
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.create-tag.outputs.version }}
+          name: Release ${{ needs.create-tag.outputs.version }}
+          generate_release_notes: true
