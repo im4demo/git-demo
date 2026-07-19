@@ -1,96 +1,36 @@
-name: Release Pipeline
-
-on:
-  push:
-    branches:
-      - main
-
-permissions:
-  contents: write
-
 jobs:
   merge-branches:
     name: Merge Branches
-    runs-on: ubuntu-latest
-
-    environment:
-      name: production
 
     steps:
-      - name: 📥 Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: ⚙️ Configure Git
+      - name: Configure Git
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-      - name: 🔄 1. Merging: Main → Staging
+      - name: "1. Merging: Main -> Staging"
         run: |
-          echo "::group::🔄 Merging Main → Staging"
+          echo "::group::1. Merging: Main -> Staging"
 
           git fetch origin
           git checkout staging
           git merge origin/main --no-edit
           git push origin staging
 
-          echo "✅ Main successfully merged into Staging"
-
           echo "::endgroup::"
 
-      - name: 🔄 2. Merging: Staging → Production
+      - name: "2. Merging: Staging -> Production"
         run: |
-          echo "::group::🔄 Merging Staging → Production"
+          echo "::group::2. Merging: Staging -> Production"
 
           git fetch origin
           git checkout production
           git merge origin/staging --no-edit
           git push origin production
 
-          echo "✅ Staging successfully merged into Production"
-
           echo "::endgroup::"
-
-  create-tag:
-    name: 🏷️ Create Git Tag
-    needs: merge-branches
-    runs-on: ubuntu-latest
-
-    outputs:
-      version: ${{ steps.tag.outputs.version }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Create Tag
-        id: tag
-        run: |
-          VERSION="v$(date +'%Y.%m.%d-%H%M%S')"
-
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-          git fetch origin
-          git checkout production
-
-          git tag "$VERSION"
-          git push origin "$VERSION"
-
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-  create-release:
-    name: 🚀 Create GitHub Release
-    needs: create-tag
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Publish Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.create-tag.outputs.version }}
-          name: Release ${{ needs.create-tag.outputs.version }}
-          generate_release_notes: true
